@@ -9,3 +9,30 @@ output: github_document
 library(tidyverse)
 ```
 
+## Data Import csv
+Import data using the `readr` package.
+```{r}
+litters_df = read_csv('data/FAS_litters.csv',na=c('','NA',999),skip=2)
+#relative path "./data/FAS_litters.csv".
+#
+#skip the first two rows
+litters_df = janitor::clean_names(litters_df)#package::function,convert column names to be lower case.
+```
+
+Look at the data.
+```{r}
+head(litters_df)
+tail(litters_df)
+```
+
+```{r}
+skimr::skim(litters_df)
+```
+
+## Other file formats
+```{r}
+mlb_df = read_excel('data/mlb11.xlsx')
+```
+
+
+
