@@ -1,0 +1,11 @@
+---
+title: "data_wrangling_i"
+author: "Jiayi Shi"
+date: "2022-09-20"
+output: github_document
+---
+
+```{r echo=FALSE,message=FALSE}
+library(tidyverse)
+```
+
