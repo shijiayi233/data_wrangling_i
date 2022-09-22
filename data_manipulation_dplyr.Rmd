@@ -1,0 +1,44 @@
+---
+title: "data_manipulation_dplyr"
+author: "Jiayi Shi"
+date: "2022-09-22"
+output: github_document
+---
+```{r echo=FALSE,message=FALSE}
+library(tidyverse)
+```
+Pipes:%>% "and then", tibble goes in, tibble comes out
+```{r}
+litters_data = read_csv('data/FAS_litters.csv')
+litters_data = janitor::clean_names(litters_data)
+
+pups_data = read_csv("./data/FAS_pups.csv",col_types = "ciiiii")
+pups_data = janitor::clean_names(pups_data)
+```
+
+## Select
+```{r}
+select(litters_data,1:5)
+#select(litters_data, group, litter_number, gd0_weight, pups_born_alive)
+#select(litters_data,group:gd_of_birth)
+#select(litters_data,group,gd_of_birth)
+#specify columns you’d like to remove:select(litters_data, -group,-pups_survive) 
+```
+
+* Rename(won't change the original dataset, unless litters_data=...)
+```{r}
+#select(df, New_name = initial_name)#method1
+select(litters_data,GROUP = group)
+rename(litters_data, GROUP = group)#method2
+```
+
+* `starts_with()`, `ends_with()`, and `contains()`    
+Useful functions in select, especially when variables are named with suffixes or other standard patterns.
+```{r}
+select(litters_data, starts_with("gd"))
+select(litters_data, ends_with("weight"))
+select(litters_data, contains("pups"))
+```
+
+*`everything()`   
+Pulling first (reorganizing columns)

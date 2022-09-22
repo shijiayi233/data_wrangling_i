@@ -7,12 +7,14 @@ output: github_document
 
 ```{r echo=FALSE,message=FALSE}
 library(tidyverse)
+library(readxl)
+library(haven)
 ```
 
 ## Data Import csv
 Import data using the `readr` package.
 ```{r}
-litters_df = read_csv('data/FAS_litters.csv',na=c('','NA',999),skip=2)
+litters_df = read_csv('data/FAS_litters.csv',col_types='ccddiiii',na=c('','NA',999),skip=2)
 #relative path "./data/FAS_litters.csv".
 #
 #skip the first two rows
@@ -31,7 +33,18 @@ skimr::skim(litters_df)
 
 ## Other file formats
 ```{r}
-mlb_df = read_excel('data/mlb11.xlsx')
+mlb_df = read_excel('data/mlb11.xlsx',range='B3:D6')
+view(mlb_df)
+```
+
+Read in a SAS dataset. 
+```{r}
+pulse_df = read_sas('data/public_pulse_data.sas7bdat')
+```
+
+## Data export
+```{r}
+write_csv(litters_df,file = 'results/new_df.cvs')
 ```
 
 
