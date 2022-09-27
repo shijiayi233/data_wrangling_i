@@ -41,7 +41,7 @@ select(litters_data, ends_with("weight"))
 select(litters_data, contains("pups"))
 ```
 
-*`everything()`,`relocate()``   
+* `everything()`,`relocate()`   
 Pulling first (reorganizing columns)
 ```{r}
 select(litters_data, litter_number, pups_survive, everything())#method1
