@@ -1,0 +1,26 @@
+---
+title: "Tidy_data"
+output: html_document
+date: "2022-09-27"
+---
+
+## Join
+inner joins (intersection)   
+Outer joins:left join, right join, full join (union)  
+
+## Key Functions
+For tidying table:  
+`pivot_longer`  
+`pivot_wider`  
+`separate`  
+For combining multiple tables:  
+`bind_rows`    
+`*_join`  
+
+## Example
+```{r}
+library(tidyverse)
+
+options(tibble.print_min=5)
+```
+

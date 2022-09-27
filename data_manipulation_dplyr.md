@@ -156,4 +156,59 @@ select(litters_data, contains("pups"))
     ## 10               8               0            8
     ## # … with 39 more rows
 
-\*`everything()` Pulling first (reorganizing columns)
+\*`everything()`,\`relocate()\`\`  
+Pulling first (reorganizing columns)
+
+``` r
+select(litters_data, litter_number, pups_survive, everything())#method1
+```
+
+    ## # A tibble: 49 × 8
+    ##    litter_number   pups_survive group gd0_weight gd18_…¹ gd_of…² pups_…³ pups_…⁴
+    ##    <chr>                  <dbl> <chr>      <dbl>   <dbl>   <dbl>   <dbl>   <dbl>
+    ##  1 #85                        3 Con7        19.7    34.7      20       3       4
+    ##  2 #1/2/95/2                  7 Con7        27      42        19       8       0
+    ##  3 #5/5/3/83/3-3              5 Con7        26      41.4      19       6       0
+    ##  4 #5/4/2/95/2                4 Con7        28.5    44.1      19       5       1
+    ##  5 #4/2/95/3-3                6 Con7        NA      NA        20       6       0
+    ##  6 #2/2/95/3-2                4 Con7        NA      NA        20       6       0
+    ##  7 #1/5/3/83/3-3/2            9 Con7        NA      NA        20       9       0
+    ##  8 #3/83/3-3                  8 Con8        NA      NA        20       9       1
+    ##  9 #2/95/3                    8 Con8        NA      NA        20       8       0
+    ## 10 #3/5/2/2/95                8 Con8        28.5    NA        20       8       0
+    ## # … with 39 more rows, and abbreviated variable names ¹​gd18_weight,
+    ## #   ²​gd_of_birth, ³​pups_born_alive, ⁴​pups_dead_birth
+
+``` r
+relocate(litters_data, litter_number, pups_survive)#method2
+```
+
+    ## # A tibble: 49 × 8
+    ##    litter_number   pups_survive group gd0_weight gd18_…¹ gd_of…² pups_…³ pups_…⁴
+    ##    <chr>                  <dbl> <chr>      <dbl>   <dbl>   <dbl>   <dbl>   <dbl>
+    ##  1 #85                        3 Con7        19.7    34.7      20       3       4
+    ##  2 #1/2/95/2                  7 Con7        27      42        19       8       0
+    ##  3 #5/5/3/83/3-3              5 Con7        26      41.4      19       6       0
+    ##  4 #5/4/2/95/2                4 Con7        28.5    44.1      19       5       1
+    ##  5 #4/2/95/3-3                6 Con7        NA      NA        20       6       0
+    ##  6 #2/2/95/3-2                4 Con7        NA      NA        20       6       0
+    ##  7 #1/5/3/83/3-3/2            9 Con7        NA      NA        20       9       0
+    ##  8 #3/83/3-3                  8 Con8        NA      NA        20       9       1
+    ##  9 #2/95/3                    8 Con8        NA      NA        20       8       0
+    ## 10 #3/5/2/2/95                8 Con8        28.5    NA        20       8       0
+    ## # … with 39 more rows, and abbreviated variable names ¹​gd18_weight,
+    ## #   ²​gd_of_birth, ³​pups_born_alive, ⁴​pups_dead_birth
+
+## filter
+
+filter(df,condition) gd_of_birth == 20 pups_born_alive \>= 2
+pups_survive != 4 group %in% c(“Con7”, “Con8”) group == “Con7” &
+gd_of_birth == 20
+
+### drop missing value
+
+!(is.na(gd0_weight))  
+Preferred:  
+drop_na(litters_data) will remove any row with a missing value.  
+drop_na(litters_data, wt_increase) will remove rows for which
+wt_increase is missing.

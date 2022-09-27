@@ -7,7 +7,8 @@ output: github_document
 ```{r echo=FALSE,message=FALSE}
 library(tidyverse)
 ```
-Pipes:%>% "and then", tibble goes in, tibble comes out
+
+## Load dataset
 ```{r}
 litters_data = read_csv('data/FAS_litters.csv')
 litters_data = janitor::clean_names(litters_data)
@@ -40,5 +41,63 @@ select(litters_data, ends_with("weight"))
 select(litters_data, contains("pups"))
 ```
 
-*`everything()`   
+*`everything()`,`relocate()``   
 Pulling first (reorganizing columns)
+```{r}
+select(litters_data, litter_number, pups_survive, everything())#method1
+relocate(litters_data, litter_number, pups_survive)#method2
+```
+
+## filter
+`filter(df,condition)`  
+`gd_of_birth == 20`  
+`pups_born_alive >= 2`  
+`pups_survive != 4`  
+`group %in% c("Con7", "Con8")`  
+`group == "Con7" & gd_of_birth == 20`  
+
+### drop missing value
+`!(is.na(gd0_weight))` 
+Preferred:  
+`drop_na(litters_data)` will remove any row with a missing value.  
+`drop_na(litters_data, wt_increase)` will remove rows for which wt_increase is missing.  
+
+
+## mutate
+```{r}
+mutate(litters_data,
+  wt_gain = gd18_weight - gd0_weight,
+  group = str_to_lower(group)
+)
+```
+
+## arrange
+Sort dataset on 'group' in descending order, then on `pups_born_alive` in ascending order.  
+```{r}
+head(arrange(litters_data, desc(group), pups_born_alive), 10)
+```
+
+## Pipes: %>% (Ctrl + Shift + M)
+"and then", tibble goes in, tibble comes out  
+using . as a placeholder for the result of the preceding call  
+```{r}
+litters_data = 
+  read_csv("./data/FAS_litters.csv", col_types = "ccddiiii") %>%
+  janitor::clean_names() %>%
+  select(-pups_survive) %>%
+  mutate(
+    wt_gain = gd18_weight - gd0_weight,
+    group = str_to_lower(group)) %>% 
+  drop_na(wt_gain)
+
+litters_data
+```
+
+```{r}
+litters_data %>%
+  lm(wt_gain ~ pups_born_alive, data = .) %>%
+  broom::tidy()
+```
+
+
+
