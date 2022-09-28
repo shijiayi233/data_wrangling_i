@@ -67,15 +67,6 @@ litters = read_csv('data/FAS_litters.csv') %>%
   )#recode(.x, old=new) .x is a vector to modify
 ```
 
-    ## Rows: 49 Columns: 8
-    ## ── Column specification ────────────────────────────────────────────────────────
-    ## Delimiter: ","
-    ## chr (2): Group, Litter Number
-    ## dbl (6): GD0 weight, GD18 weight, GD of Birth, Pups born alive, Pups dead @ ...
-    ## 
-    ## ℹ Use `spec()` to retrieve the full column specification for this data.
-    ## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
-
 - if_else
 
 ``` r
@@ -83,23 +74,14 @@ litters = read_csv('data/FAS_litters.csv') %>%
   janitor::clean_names() %>% 
   select(litter_number,ends_with('weight')) %>% 
   pivot_longer(
-    2:3,
-    names_to = 'gd',
-    values_to = 'weight'
+    2:3, # or:gd0_weight:gd18_weight (select columns)
+    names_to = 'gd', # old_col_names goes to new variable named 'gd'
+    values_to = 'weight' # old_col_values goes to new variable named 'weight'
   ) %>% 
   mutate(
     gd = if_else(.$gd=='gd0_weight',0,18)
   )
 ```
-
-    ## Rows: 49 Columns: 8
-    ## ── Column specification ────────────────────────────────────────────────────────
-    ## Delimiter: ","
-    ## chr (2): Group, Litter Number
-    ## dbl (6): GD0 weight, GD18 weight, GD of Birth, Pups born alive, Pups dead @ ...
-    ## 
-    ## ℹ Use `spec()` to retrieve the full column specification for this data.
-    ## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
 
 - replace
 
@@ -115,15 +97,6 @@ litters = read_csv('data/FAS_litters.csv') %>%
   mutate(gd = replace(gd, gd=='gd0_weight', 0)) %>% 
   mutate(gd = replace(gd, gd=='gd18_weight', 18))
 ```
-
-    ## Rows: 49 Columns: 8
-    ## ── Column specification ────────────────────────────────────────────────────────
-    ## Delimiter: ","
-    ## chr (2): Group, Litter Number
-    ## dbl (6): GD0 weight, GD18 weight, GD of Birth, Pups born alive, Pups dead @ ...
-    ## 
-    ## ℹ Use `spec()` to retrieve the full column specification for this data.
-    ## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
 
 ## pivot_wider
 
@@ -175,18 +148,7 @@ pups = read_csv("data/FAS_pups.csv") %>%
     sex = recode(sex,`1`='male',`2`='female'),
     # backquote for number, regular quote for character 
   )
-```
 
-    ## Rows: 313 Columns: 6
-    ## ── Column specification ────────────────────────────────────────────────────────
-    ## Delimiter: ","
-    ## chr (1): Litter Number
-    ## dbl (5): Sex, PD ears, PD eyes, PD pivot, PD walk
-    ## 
-    ## ℹ Use `spec()` to retrieve the full column specification for this data.
-    ## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
-
-``` r
 litters = read_csv("data/FAS_litters.csv") %>% 
   janitor::clean_names() %>% 
   separate(group,into = c("dose","day_of_treatment"),sep = 3) %>% 
@@ -195,18 +157,7 @@ litters = read_csv("data/FAS_litters.csv") %>%
     wt_gain = gd18_weight-gd0_weight,
     dose = str_to_lower(dose)
   )
-```
 
-    ## Rows: 49 Columns: 8
-    ## ── Column specification ────────────────────────────────────────────────────────
-    ## Delimiter: ","
-    ## chr (2): Group, Litter Number
-    ## dbl (6): GD0 weight, GD18 weight, GD of Birth, Pups born alive, Pups dead @ ...
-    ## 
-    ## ℹ Use `spec()` to retrieve the full column specification for this data.
-    ## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
-
-``` r
 fas_data = left_join(pups,litters,by = "litter_number")
 ```
 
@@ -215,70 +166,29 @@ fas_data = left_join(pups,litters,by = "litter_number")
 ``` r
 surv_os = read_csv("data/surv_os.csv") %>% 
   setNames(c("uni","os"))
-```
-
-    ## Rows: 173 Columns: 2
-    ## ── Column specification ────────────────────────────────────────────────────────
-    ## Delimiter: ","
-    ## chr (2): What is your UNI?, What operating system do you use?
-    ## 
-    ## ℹ Use `spec()` to retrieve the full column specification for this data.
-    ## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
-
-``` r
 # change column names: setNames(df,c(newnamecol1,newnamecol2,...))
 surv_prog = read_csv("data/surv_program_git.csv") %>% 
   setNames(c("uni","prog","exp"))
-```
 
-    ## Rows: 135 Columns: 3
-    ## ── Column specification ────────────────────────────────────────────────────────
-    ## Delimiter: ","
-    ## chr (3): What is your UNI?, What is your degree program?, Which most accurat...
-    ## 
-    ## ℹ Use `spec()` to retrieve the full column specification for this data.
-    ## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
-
-``` r
 surv = full_join(surv_os,surv_prog,by = "uni")
 ```
+
+Answer:
 
 ``` r
 surv_os = read_csv("data/surv_os.csv") %>% 
   janitor::clean_names() %>% #不仅变小写，而且加下划线
   rename(id = what_is_your_uni, os = what_operating_system_do_you_use)
-```
 
-    ## Rows: 173 Columns: 2
-    ## ── Column specification ────────────────────────────────────────────────────────
-    ## Delimiter: ","
-    ## chr (2): What is your UNI?, What operating system do you use?
-    ## 
-    ## ℹ Use `spec()` to retrieve the full column specification for this data.
-    ## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
-
-``` r
 surv_pr_git = read_csv("data/surv_program_git.csv") %>% 
   janitor::clean_names() %>% 
   rename(
     id = what_is_your_uni, 
     prog = what_is_your_degree_program,
     git_exp = which_most_accurately_describes_your_experience_with_git)
-```
 
-    ## Rows: 135 Columns: 3
-    ## ── Column specification ────────────────────────────────────────────────────────
-    ## Delimiter: ","
-    ## chr (3): What is your UNI?, What is your degree program?, Which most accurat...
-    ## 
-    ## ℹ Use `spec()` to retrieve the full column specification for this data.
-    ## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
-
-``` r
 left_join(surv_os, surv_pr_git)
 ```
-
-    ## Joining, by = "id"
 
     ## # A tibble: 175 × 4
     ##   id          os         prog  git_exp                                          
@@ -294,8 +204,6 @@ left_join(surv_os, surv_pr_git)
 inner_join(surv_os, surv_pr_git)
 ```
 
-    ## Joining, by = "id"
-
     ## # A tibble: 129 × 4
     ##   id          os         prog  git_exp                                          
     ##   <chr>       <chr>      <chr> <chr>                                            
@@ -309,8 +217,6 @@ inner_join(surv_os, surv_pr_git)
 ``` r
 anti_join(surv_os, surv_pr_git)
 ```
-
-    ## Joining, by = "id"
 
     ## # A tibble: 46 × 2
     ##   id          os        
@@ -326,8 +232,6 @@ anti_join(surv_os, surv_pr_git)
 # anti_join(x, y, by = NULL, copy = FALSE, ...): return all rows from x without a match in y.
 anti_join(surv_pr_git, surv_os)
 ```
-
-    ## Joining, by = "id"
 
     ## # A tibble: 15 × 3
     ##    id         prog  git_exp                                                     
