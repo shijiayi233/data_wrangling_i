@@ -92,6 +92,7 @@ litters = read_csv('data/FAS_litters.csv') %>%
 ```
 
 ## pivot_wider
+
 ```{r}
 analysis_result = tibble(
   group = c("treatment", "treatment", "placebo", "placebo"),
