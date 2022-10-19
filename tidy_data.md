@@ -32,11 +32,13 @@ without loading the whole library.
 ``` r
 pulse_df = haven::read_sas('data/public_pulse_data.sas7bdat') %>% 
   janitor::clean_names()
+```
 
-pulse_tidy_data = 
+``` r
+pulse_data = 
   pivot_longer(
     pulse_df,
-    4:7,
+    4:7,#c(4,5,6,7),
     names_to = 'visit', #create a variable named by names_to
     names_prefix = 'bdi_score_',  
     values_to = 'bdi'
